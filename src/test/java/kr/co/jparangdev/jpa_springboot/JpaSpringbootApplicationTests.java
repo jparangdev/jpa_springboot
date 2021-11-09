@@ -8,6 +8,7 @@ class JpaSpringbootApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }
