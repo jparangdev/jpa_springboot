@@ -15,11 +15,13 @@ import javax.persistence.ManyToMany;
 import kr.co.jparangdev.jpa_springboot.domain.Category;
 import kr.co.jparangdev.jpa_springboot.exception.NotEnoughStockException;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 @Getter
+@Setter
 public abstract class Item {
 
 	@Id

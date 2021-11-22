@@ -1,10 +1,13 @@
 package kr.co.jparangdev.jpa_springboot.repository;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Repository;
 
 import kr.co.jparangdev.jpa_springboot.domain.Order;
+import kr.co.jparangdev.jpa_springboot.domain.OrderSearch;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -21,7 +24,7 @@ public class OrderRepository {
 		return em.find(Order.class, id);
 	}
 
-	// public List<Order> findAll(OrderSearch orderSearch) {
-	//
-	// }
+	public List<Order> findAll(OrderSearch orderSearch) {
+		return null;
+	}
 }
