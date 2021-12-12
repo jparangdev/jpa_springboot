@@ -34,7 +34,7 @@ public class OrderRepository {
 		return em.find(Order.class, id);
 	}
 
-	public List<Order> findAll(OrderSearch orderSearch) {
+	public List<Order> findAllByString(OrderSearch orderSearch) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Order> cq = cb.createQuery(Order.class);
 		Root<Order> o = cq.from(Order.class);
@@ -57,4 +57,5 @@ public class OrderRepository {
 		TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000); //최대 1000건
 		return query.getResultList();
 	}
+
 }

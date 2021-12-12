@@ -1,13 +1,13 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/jpa_springboot
+    url: jdbc:h2:tcp://localhost/~/h2/database/jpa-springboot
     username: sa
     password:
     drivcer-class-name: org.h2.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       properites:
         hibernate:
 #          show_sql: true
