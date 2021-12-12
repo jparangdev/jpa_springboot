@@ -55,7 +55,7 @@ public class MemberApiController {
 	public Result memberV2() {
 		List<Member> findMembers = memberService.findAll();
 		List<String> members = findMembers.stream().map(Member::getName).collect(Collectors.toList());
-		return new Result(members);
+		return new Result(members.size(), members);
 	}
 
 
@@ -89,6 +89,7 @@ public class MemberApiController {
 	@Data
 	@AllArgsConstructor
 	static class Result<T> {
+		private int count;
 		private T data;
 	}
 
