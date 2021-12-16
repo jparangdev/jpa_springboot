@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import kr.co.jparangdev.jpa_springboot.domain.Member;
 import kr.co.jparangdev.jpa_springboot.domain.Order;
 import kr.co.jparangdev.jpa_springboot.domain.OrderSearch;
+import kr.co.jparangdev.jpa_springboot.domain.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -58,4 +59,20 @@ public class OrderRepository {
 		return query.getResultList();
 	}
 
+	public List<Order> findAllWithMemberDelivery() {
+		return em.createQuery(
+			"select o from Order o join fetch o.member m join fetch o.delivery d", Order.class
+		).getResultList();
+	}
+
+	public List<OrderSimpleQueryDto> findOrderDtos() {
+		return em.createQuery(
+			"select new kr.co.jparangdev.jpa_springboot.domain.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) "
+				+ "from Order o "
+				+ "join o.member m "
+				+ "join o.delivery d"
+				, OrderSimpleQueryDto.class
+		)
+			.getResultList();
+	}
 }
