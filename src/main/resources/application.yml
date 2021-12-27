@@ -8,12 +8,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-      properites:
-        hibernate:
+#    properites:
+#        hibernate:
 #          show_sql: true
-          format_sql: true
+#          format_sql: true
 
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
+#logging:
+#  level:
+#    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
