@@ -55,6 +55,22 @@ public class OrderApiController {
 		return list;
 	}
 
+	/**
+	* jpa의 distinct를 이용하면 우리가 원하는 컬렉션 데이터 조회가 가능하다
+	 * 디비의 distinct키워드를 날려주고 jpa에서 중복을 걸러서 컬렉션에 담아준다. 3중일땐 어떨까??
+	 * 다만 페이징이 불가능하다 ㅡㅡ 페치조인을 하는 순간 페이징을 이용한 쿼리가 안된다.
+	 * 강제로 시행하는 경우 데이터를 다가지고 와서 메모리에서 페이징을 진행하기 때문에 성능상 이슈가 있다.
+	 * 3중인 경우 데이터의 정합성이 안맞을 수 있다. 그러니 컬렉션 패치조인은 딱 하나만 쓰자!
+	*/
+	@GetMapping("/api/v3/orders")
+	public List<OrderDto> orderV3() {
+		List<Order> orders = orderRepository.findAllWithItem();
+		List<OrderDto> list = orders.stream()
+			.map(o -> OrderDto.from(o))
+			.collect(Collectors.toList());
+		return list;
+	}
+
 	@Getter
 	static class OrderDto {
 
