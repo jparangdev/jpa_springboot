@@ -5,22 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.jparangdev.jpa_springboot.domain.Address;
 import kr.co.jparangdev.jpa_springboot.domain.Order;
 import kr.co.jparangdev.jpa_springboot.domain.OrderItem;
 import kr.co.jparangdev.jpa_springboot.domain.OrderSearch;
 import kr.co.jparangdev.jpa_springboot.domain.OrderStatus;
-import kr.co.jparangdev.jpa_springboot.domain.item.Item;
 import kr.co.jparangdev.jpa_springboot.repository.OrderRepository;
+import kr.co.jparangdev.jpa_springboot.repository.order.query.OrderQueryDto;
+import kr.co.jparangdev.jpa_springboot.repository.order.query.OrderQueryRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class OrderApiController {
 
 	private final OrderRepository orderRepository;
+
+	private final OrderQueryRepository queryRepository;
 
 	@GetMapping("/api/v1/orders")
 	public List<Order> orderV1() {
@@ -69,6 +67,34 @@ public class OrderApiController {
 			.map(o -> OrderDto.from(o))
 			.collect(Collectors.toList());
 		return list;
+	}
+
+
+	/**
+	* default_bath_fetch_size 를 통한 컬렉션 조인 페이징 해결
+	 * 약 100~500 정도로 두고 사용한다.
+	 * 만약 클래스별로 별도로 사이즈를 두고싶다면 @BatchSize 를 설정해주도록 한다.
+	 * XtoOne 관계는 데이터 수에 영향을 주지 않기때문에 페치조인을 통해 쿼리수를 줄일 수 있다.
+	 * 나머지는 배치사이즈를 이용하자
+	*/
+	@GetMapping("/api/v3.1/orders")
+	public List<OrderDto> orderV3_page(@RequestParam(value = "offset", defaultValue = "0") int offset,
+		@RequestParam(value = "limit", defaultValue = "100") int limit) {
+		List<Order> orders = orderRepository.findAllWithMemberDelivery(offset, limit);
+		List<OrderDto> list = orders.stream()
+			.map(o -> OrderDto.from(o))
+			.collect(Collectors.toList());
+		return list;
+	}
+
+	/**
+	* toOne 관계는 조인을 통해 같이 조회 해주고
+	 * otMany는 쿼리를 별도로 만들어 반복을 통해 따로 조회를 한다.
+	 * 하지만 이것도 결국 N+1
+	*/
+	@GetMapping("/api/v4/orders")
+	public List<OrderQueryDto> ordersV4() {
+		return queryRepository.findOrderQueryDtos();
 	}
 
 	@Getter

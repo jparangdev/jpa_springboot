@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 import kr.co.jparangdev.jpa_springboot.domain.Member;
 import kr.co.jparangdev.jpa_springboot.domain.Order;
 import kr.co.jparangdev.jpa_springboot.domain.OrderSearch;
-import kr.co.jparangdev.jpa_springboot.domain.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -65,13 +64,23 @@ public class OrderRepository {
 		).getResultList();
 	}
 
-	public List<Order> findAllWithItem() {
+	public List<Order> findAllWithMemberDelivery(int offset, int limit) {
 		return em.createQuery(
-			"select distinct o from Order o"
+				"select o from Order o join fetch o.member m join fetch o.delivery d", Order.class)
+			.setFirstResult(offset)
+			.setMaxResults(limit)
+			.getResultList();
+	}
+
+	// toOne 관계는 계속 fetch 조인으로 해결해도 된다. -> 데이터 수가 변하진 않기 때문에
+	public List<Order> findAllWithItem() {
+		return em.createQuery("select distinct o from Order o"
 				+ " join fetch o.member m"
 				+ " join fetch o.delivery d"
 				+ " join fetch o.orderItems oi"
 				+ " join fetch oi.item i", Order.class)
+			.setFirstResult(1)
+			.setMaxResults(100)
 			.getResultList();
 	}
 }

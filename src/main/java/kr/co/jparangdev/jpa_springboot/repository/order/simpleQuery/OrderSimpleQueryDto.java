@@ -1,7 +1,10 @@
-package kr.co.jparangdev.jpa_springboot.domain;
+package kr.co.jparangdev.jpa_springboot.repository.order.simpleQuery;
 
 import java.time.LocalDateTime;
 
+import kr.co.jparangdev.jpa_springboot.domain.Address;
+import kr.co.jparangdev.jpa_springboot.domain.Order;
+import kr.co.jparangdev.jpa_springboot.domain.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 

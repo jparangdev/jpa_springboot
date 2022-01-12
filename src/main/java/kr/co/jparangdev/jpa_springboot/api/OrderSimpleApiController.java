@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.jparangdev.jpa_springboot.domain.Order;
 import kr.co.jparangdev.jpa_springboot.domain.OrderSearch;
-import kr.co.jparangdev.jpa_springboot.domain.OrderSimpleQueryDto;
+import kr.co.jparangdev.jpa_springboot.repository.order.simpleQuery.OrderSimpleQueryDto;
 import kr.co.jparangdev.jpa_springboot.domain.SimpleOrderDto;
 import kr.co.jparangdev.jpa_springboot.repository.OrderRepository;
-import kr.co.jparangdev.jpa_springboot.repository.simpleQuery.OrderSimpleQueryRepository;
+import kr.co.jparangdev.jpa_springboot.repository.order.simpleQuery.OrderSimpleQueryRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
