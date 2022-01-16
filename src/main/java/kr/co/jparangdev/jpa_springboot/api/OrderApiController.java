@@ -1,5 +1,7 @@
 package kr.co.jparangdev.jpa_springboot.api;
 
+import static java.util.stream.Collectors.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,8 @@ import kr.co.jparangdev.jpa_springboot.domain.OrderItem;
 import kr.co.jparangdev.jpa_springboot.domain.OrderSearch;
 import kr.co.jparangdev.jpa_springboot.domain.OrderStatus;
 import kr.co.jparangdev.jpa_springboot.repository.OrderRepository;
+import kr.co.jparangdev.jpa_springboot.repository.order.query.OrderFlatDto;
+import kr.co.jparangdev.jpa_springboot.repository.order.query.OrderItemQueryDto;
 import kr.co.jparangdev.jpa_springboot.repository.order.query.OrderQueryDto;
 import kr.co.jparangdev.jpa_springboot.repository.order.query.OrderQueryRepository;
 import lombok.Getter;
@@ -95,6 +99,27 @@ public class OrderApiController {
 	@GetMapping("/api/v4/orders")
 	public List<OrderQueryDto> ordersV4() {
 		return queryRepository.findOrderQueryDtos();
+	}
+
+	/**
+	 * In 절을 만들이서 파라미터를 넣어서 조회를 해준다... 이것도 맞을까?
+	 *
+	*/
+	@GetMapping("/api/v5/orders")
+	public List<OrderQueryDto> ordersV5() {
+		return queryRepository.findAllByDto_optimization();
+	}
+
+	@GetMapping("/api/v5/orders")
+	public List<OrderQueryDto> ordersV6() {
+		List<OrderFlatDto> flat = queryRepository.findAllByDto_flat();
+		return flat.stream()
+			.collect(groupingBy(o-> new OrderQueryDto(o.getOrderId(), o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress()),
+				mapping(o -> new OrderItemQueryDto(o.getOrderId(), o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
+			)).entrySet().stream()
+			.map(e-> new OrderQueryDto(e.getKey().getOrderId(), e.getKey().getName(), e.getKey().getOrderDate(), e.getKey()
+				.getOrderStatus(), e.getKey().getAddress(), e.getValue()))
+			.collect(toList());
 	}
 
 	@Getter
